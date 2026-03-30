@@ -55,9 +55,21 @@ function initDeck() {
     
     let cardIndex = 0;
     const totalCards = 52;
-    const angleSpread = window.innerWidth < 600 ? 100 : 120;
+    
+    // Ajusta para telas menores
+    let angleSpread, translateDistance;
+    if (window.innerHeight < 550) {
+        angleSpread = 80;
+        translateDistance = 50;
+    } else if (window.innerHeight < 700 || window.innerWidth < 600) {
+        angleSpread = 90;
+        translateDistance = 60;
+    } else {
+        angleSpread = 110;
+        translateDistance = 80;
+    }
+    
     const startAngle = -angleSpread / 2;
-    const translateDistance = window.innerWidth < 600 ? 80 : 100;
     
     for (const suit in suits) {
         for (const value of values) {

@@ -123,24 +123,24 @@ function pickCard(cardElement, value, suit) {
     // Update status with mysterious message
     updateStatus('Concentrando energia mística...', 'O mágico está lendo sua mente');
     
-    // Get current computed position
+    // Get positions
     const cardRect = cardElement.getBoundingClientRect();
     const slotRect = slot.getBoundingClientRect();
     
-    // Fix the card position before moving
-    cardElement.style.position = 'fixed';
-    cardElement.style.left = cardRect.left + 'px';
-    cardElement.style.top = cardRect.top + 'px';
-    cardElement.style.transform = 'none';
-    cardElement.style.zIndex = '1000';
+    // Calculate center positions
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+    const cardCenterY = cardRect.top + cardRect.height / 2;
+    const slotCenterX = slotRect.left + slotRect.width / 2;
+    const slotCenterY = slotRect.top + slotRect.height / 2;
     
-    // Force reflow
-    cardElement.offsetHeight;
+    // Calculate needed translation
+    const deltaX = slotCenterX - cardCenterX;
+    const deltaY = slotCenterY - cardCenterY;
     
-    // Animate to slot position
+    // Animate card to slot using translate
     cardElement.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-    cardElement.style.left = (slotRect.left + (slotRect.width - cardRect.width) / 2) + 'px';
-    cardElement.style.top = (slotRect.top + (slotRect.height - cardRect.height) / 2) + 'px';
+    cardElement.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(0deg)`;
+    cardElement.style.zIndex = '1000';
     
     slot.classList.add('has-card');
     

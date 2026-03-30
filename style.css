@@ -379,6 +379,11 @@ body {
         0 0 40px var(--gold);
 }
 
+/* Card face down state - shows back */
+.card.face-down .card-inner {
+    transform: rotateY(180deg);
+}
+
 /* ========================================
    MAGICIAN SECTION
    ======================================== */

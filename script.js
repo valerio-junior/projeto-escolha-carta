@@ -131,35 +131,47 @@ function pickCard(cardElement, value, suit) {
     const translateX = slotRect.left - cardRect.left + (slotRect.width - cardRect.width) / 2;
     const translateY = slotRect.top - cardRect.top + (slotRect.height - cardRect.height) / 2;
     
-    // Animate card to slot
+    // First animate card to slot
     cardElement.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
     cardElement.style.transform = `translate(${translateX}px, ${translateY}px) rotate(0deg) scale(1.1)`;
     
     slot.classList.add('has-card');
     
+    // After reaching the slot, flip card face down
+    setTimeout(() => {
+        cardElement.classList.add('face-down');
+        updateStatus('Carta escondida...', 'O mágico agora vai se concentrar para ler sua mente');
+    }, 800);
+    
     // Dramatic pause before reveal
     setTimeout(() => {
         // Flip magician back to front
         magCard.classList.remove('flipped');
-        
-        // Add glow effect to selected card
-        cardElement.querySelector('.card-inner').style.boxShadow = '0 0 40px var(--gold), 0 0 80px rgba(201, 162, 39, 0.5)';
+        updateStatus('Revelando...', 'A mente foi lida...');
         
         setTimeout(() => {
-            // Reveal the card
-            const valueName = valueNames[value] || value;
-            const suitName = suits[suit].name;
+            // Flip card face up to reveal
+            cardElement.classList.remove('face-down');
             
-            updateStatus(
-                `${valueName} de ${suitName}!`,
-                'O mágico nunca falha... Sua mente foi lida com precisão'
-            );
+            // Add glow effect to selected card
+            cardElement.querySelector('.card-inner').style.boxShadow = '0 0 40px var(--gold), 0 0 80px rgba(201, 162, 39, 0.5)';
             
-            // Show reset button
-            btnReset.classList.remove('hidden');
-            isAnimating = false;
+            setTimeout(() => {
+                // Reveal the card name
+                const valueName = valueNames[value] || value;
+                const suitName = suits[suit].name;
+                
+                updateStatus(
+                    `${valueName} de ${suitName}!`,
+                    'O mágico nunca falha... Sua mente foi lida com precisão'
+                );
+                
+                // Show reset button
+                btnReset.classList.remove('hidden');
+                isAnimating = false;
+            }, 600);
         }, 800);
-    }, 1500);
+    }, 2500);
 }
 
 // ========================================

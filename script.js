@@ -123,17 +123,24 @@ function pickCard(cardElement, value, suit) {
     // Update status with mysterious message
     updateStatus('Concentrando energia mística...', 'O mágico está lendo sua mente');
     
-    // Get positions for animation
-    const slotRect = slot.getBoundingClientRect();
+    // Get current computed position
     const cardRect = cardElement.getBoundingClientRect();
+    const slotRect = slot.getBoundingClientRect();
     
-    // Calculate translation
-    const translateX = slotRect.left - cardRect.left + (slotRect.width - cardRect.width) / 2;
-    const translateY = slotRect.top - cardRect.top + (slotRect.height - cardRect.height) / 2;
+    // Fix the card position before moving
+    cardElement.style.position = 'fixed';
+    cardElement.style.left = cardRect.left + 'px';
+    cardElement.style.top = cardRect.top + 'px';
+    cardElement.style.transform = 'none';
+    cardElement.style.zIndex = '1000';
     
-    // First animate card to slot
+    // Force reflow
+    cardElement.offsetHeight;
+    
+    // Animate to slot position
     cardElement.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-    cardElement.style.transform = `translate(${translateX}px, ${translateY}px) rotate(0deg) scale(1.1)`;
+    cardElement.style.left = (slotRect.left + (slotRect.width - cardRect.width) / 2) + 'px';
+    cardElement.style.top = (slotRect.top + (slotRect.height - cardRect.height) / 2) + 'px';
     
     slot.classList.add('has-card');
     

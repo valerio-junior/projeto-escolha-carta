@@ -2,34 +2,75 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Magica - escolha carta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Grande Ilusionista - Truque de Cartas</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+    
     <div class="stage">
-        <h1 id="status-text">O Mágico está pronto...</h1>
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">&#9824;</span>
+                <span class="logo-text">O Grande Ilusionista</span>
+            </div>
+        </header>
+
+        <h1 id="status-text" class="status-text">
+            <span class="status-line">O Mestre das Cartas aguarda...</span>
+            <span class="status-subtitle">Prepare-se para testemunhar o impossível</span>
+        </h1>
         
         <div class="main-area">
-            <div class="deck-wrapper">
-                <img src="assets/mao.jpg" alt="Mão" class="hand-img">
+            <div class="deck-section">
+                <div class="deck-glow"></div>
                 <div id="deck" class="deck-fan"></div>
+                <div class="deck-label">Baralho Místico</div>
             </div>
 
-            <div class="magician-container">
-                <div id="magician-card" class="magician-card">
-                    <div class="face front">
-                        <img src="assets/magico-de-frente.jpg" alt="Mágico Frente">
-                    </div>
-                    <div class="face back">
-                        <img src="assets/magico-de-costas.jpg" alt="Mágico Costas">
+            <div class="magician-section">
+                <div class="magician-frame">
+                    <div class="frame-corner top-left"></div>
+                    <div class="frame-corner top-right"></div>
+                    <div class="frame-corner bottom-left"></div>
+                    <div class="frame-corner bottom-right"></div>
+                    
+                    <div id="magician-card" class="magician-card">
+                        <div class="face front">
+                            <img src="assets/magico-de-frente.jpg" alt="O Grande Ilusionista">
+                        </div>
+                        <div class="face back">
+                            <img src="assets/magico-de-costas.jpg" alt="O Mágico Meditando">
+                        </div>
                     </div>
                 </div>
-                <div id="slot"></div>
+                
+                <div id="slot" class="card-slot">
+                    <span class="slot-text">Sua carta</span>
+                </div>
             </div>
         </div>
 
-        <button id="btn-action">Iniciar Truque</button>
+        <div class="controls">
+            <button id="btn-action" class="btn-magic">
+                <span class="btn-text">Iniciar o Truque</span>
+                <span class="btn-icon">&#10022;</span>
+            </button>
+            
+            <button id="btn-reset" class="btn-reset hidden">
+                <span class="btn-text">Novo Truque</span>
+            </button>
+        </div>
+
+        <footer class="footer">
+            <p>Concentre-se na carta escolhida... O mágico sentirá sua energia</p>
+        </footer>
     </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

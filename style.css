@@ -493,6 +493,14 @@ body {
     background: rgba(201, 162, 39, 0.05);
     transition: all 0.4s var(--transition-smooth);
     position: relative;
+    overflow: hidden;
+}
+
+.card-slot .card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .card-slot::before {

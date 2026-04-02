@@ -113,7 +113,7 @@ function createCard(value, suit, index, total, startAngle, angleSpread, translat
 // ========================================
 // SELEÇÃO DE CARTA
 // ========================================
-function pickCard(cardElement, value, suit) {
+async function pickCard(cardElement, value, suit) {
     if (!magCard.classList.contains('flipped') || isAnimating || selectedCard) return;
     
     isAnimating = true;
@@ -122,63 +122,82 @@ function pickCard(cardElement, value, suit) {
     
     // Atualizar status com mensagem misteriosa
     updateStatus('Concentrando energia mística...', 'O mágico está lendo sua mente');
-    
-    // Obter posições
+
+    // Encontrar posição do slot e da carta
     const cardRect = cardElement.getBoundingClientRect();
     const slotRect = slot.getBoundingClientRect();
-    
-    // Calcular posições centrais
-    const cardCenterX = cardRect.left + cardRect.width / 2;
-    const cardCenterY = cardRect.top + cardRect.height / 2;
-    const slotCenterX = slotRect.left + slotRect.width / 2;
-    const slotCenterY = slotRect.top + slotRect.height / 2;
-    
-    // Calcular translação necessária
-    const deltaX = slotCenterX - cardCenterX;
-    const deltaY = slotCenterY - cardCenterY;
-    
-    // Animar carta para o slot usando translate
-    cardElement.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-    cardElement.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(0deg)`;
+
+    // Posicionar em fixed para animação global confiável
+    cardElement.style.position = 'fixed';
+    cardElement.style.left = `${cardRect.left}px`;
+    cardElement.style.top = `${cardRect.top}px`;
+    cardElement.style.right = 'auto';
+    cardElement.style.bottom = 'auto';
+    cardElement.style.transform = 'none';
     cardElement.style.zIndex = '1000';
-    
+    cardElement.style.transition = 'all 0.8s var(--transition-smooth)';
+    document.body.appendChild(cardElement);
+
+    const targetLeft = slotRect.left + (slotRect.width - cardRect.width) / 2;
+    const targetTop = slotRect.top + (slotRect.height - cardRect.height) / 2;
+
+    await new Promise(resolve => {
+        const onTransitionEnd = (event) => {
+            if (event.propertyName === 'left' || event.propertyName === 'top') {
+                cardElement.removeEventListener('transitionend', onTransitionEnd);
+                resolve();
+            }
+        };
+
+        cardElement.addEventListener('transitionend', onTransitionEnd);
+        requestAnimationFrame(() => {
+            cardElement.style.left = `${targetLeft}px`;
+            cardElement.style.top = `${targetTop}px`;
+        });
+    });
+
+    // Ajustar para dentro do slot
     slot.classList.add('has-card');
-    
-    // Após chegar ao slot, virar carta para baixo
-    setTimeout(() => {
-        cardElement.classList.add('face-down');
-        updateStatus('Carta escondida...', 'O mágico agora vai se concentrar para ler sua mente');
-    }, 800);
-    
+    slot.appendChild(cardElement);
+    cardElement.style.transition = '';
+    cardElement.style.position = 'absolute';
+    cardElement.style.left = '50%';
+    cardElement.style.top = '50%';
+    cardElement.style.transform = 'translate(-50%, -50%)';
+    cardElement.style.zIndex = '2';
+
+    // Virar carta para baixo depois de “chegar”
+    cardElement.classList.add('face-down');
+    updateStatus('Carta escondida...', 'O mágico agora vai se concentrar para ler sua mente');
+
     // Pausa dramática antes da revelação
     setTimeout(() => {
         // Virar mágico de volta para frente
         magCard.classList.remove('flipped');
         updateStatus('Revelando...', 'A mente foi lida...');
-        
+
         setTimeout(() => {
             // Virar carta para cima para revelar
             cardElement.classList.remove('face-down');
-            
+
             // Adicionar efeito de brilho à carta selecionada
             cardElement.querySelector('.card-inner').style.boxShadow = '0 0 40px var(--gold), 0 0 80px rgba(201, 162, 39, 0.5)';
-            
+
             setTimeout(() => {
-                // Revelar o nome da carta
                 const valueName = valueNames[value] || value;
                 const suitName = suits[suit].name;
-                
+
                 updateStatus(
                     `${valueName} de ${suitName}!`,
                     'O mágico nunca falha... Sua mente foi lida com precisão'
                 );
-                
+
                 // Mostrar botão de reset
                 btnReset.classList.remove('hidden');
                 isAnimating = false;
             }, 600);
         }, 800);
-    }, 2500);
+    }, 450);
 }
 
 // ========================================
@@ -237,6 +256,10 @@ function startTrick() {
 function resetTrick() {
     // Resetar tudo
     slot.classList.remove('has-card', 'active');
+    const selected = slot.querySelector('.card');
+    if (selected) {
+        selected.remove();
+    }
     btnReset.classList.add('hidden');
     btn.classList.remove('hidden');
     

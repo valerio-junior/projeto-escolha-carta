@@ -172,8 +172,6 @@ async function pickCard(cardElement, value, suit) {
 
     // Pausa dramática antes da revelação
     setTimeout(() => {
-        // Virar mágico de volta para frente
-        magCard.classList.remove('flipped');
         updateStatus('Revelando...', 'A mente foi lida...');
 
         setTimeout(() => {
@@ -195,6 +193,11 @@ async function pickCard(cardElement, value, suit) {
                 // Mostrar botão de reset
                 btnReset.classList.remove('hidden');
                 isAnimating = false;
+
+                // Fazer o mágico virar para frente 3 segundos após a carta ser revelada
+                setTimeout(() => {
+                    magCard.classList.remove('flipped');
+                }, 3000);
             }, 600);
         }, 800);
     }, 450);
